@@ -1,3 +1,24 @@
+// basics
+function add222(
+  n1: number,
+  n2: number,
+  showResult: boolean,
+  resultPhrase: string
+) {
+  if (showResult) {
+    console.log(resultPhrase + (n1 + n2));
+  } else {
+    return n1 + n2;
+  }
+}
+let number1: number;
+number1 = 3;
+const number2 = 2.5;
+const printResult = true;
+const resultPhrase = "result is: ";
+add222(number1, number2, printResult, resultPhrase);
+
+// ----------------------------------------------------types---------------------------------------------------------------
 type Admin = {
   name: string;
   privileges: string[];
@@ -125,3 +146,71 @@ const inputUser2 = null;
 console.log(inputUser ?? "test"); //test
 console.log(inputUser1 ?? "test"); //""
 console.log(inputUser2 ?? "test"); //"test"
+
+// -------------------------------------generics-------------------------------------------------------------------------
+const names: Array<string> = ["ali", "reza"]; //string[]
+
+const promise: Promise<string | object> = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve("resolve");
+  }, 2000);
+});
+
+promise.then((data) => {
+  console.log(data);
+});
+type name = object | string | number;
+// custom generic
+function merge<T extends name, U>(objA: T, objB: U) {
+  console.log(objB);
+  return Object.assign(objA, objB);
+}
+const mergedObject = merge({ name: "bijan", family: "ssas" }, { age: 10 });
+const mergedObject1 = merge({ name: "bijan", family: "ssas" }, 30);
+console.log(mergedObject);
+
+interface Lengthy {
+  length: number;
+}
+function countAndDescribe<T extends Lengthy>(element: T): [T, string] {
+  let descriptionText = "Got no value";
+  if (element.length === 1) {
+    descriptionText = "Got 1 element";
+  } else if (element.length > 1) {
+    descriptionText = `Got ${element.length} elements`;
+  }
+  return [element, descriptionText];
+}
+console.log(countAndDescribe("abc"));
+console.log(countAndDescribe(["abc", "ss"]));
+
+function extractAndConvert<T extends object, U extends keyof T>(
+  obj: T,
+  key: U
+) {
+  return `value ${obj[key]} `;
+}
+
+extractAndConvert({ name: "kk" }, "name");
+// --------------------------------------------------
+
+interface CourseGoal {
+  title: string;
+  description: string;
+  completeUntil: Date;
+}
+
+function createCourseGoal(
+  title: string,
+  description: string,
+  date: Date
+): CourseGoal {
+  let courseGoal: Partial<CourseGoal> = {};
+  courseGoal.title = title;
+  courseGoal.description = description;
+  courseGoal.completeUntil = date;
+  return courseGoal as CourseGoal;
+}
+
+const namesArr: Readonly<string[]> = ["bojan", "reza"];
+// namesArr.push('ssd') shows error
